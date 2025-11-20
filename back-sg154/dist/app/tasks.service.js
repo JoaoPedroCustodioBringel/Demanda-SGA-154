@@ -23,35 +23,76 @@ let TasksService = class TasksService {
         this.taskRepository = taskRepository;
     }
     async findAll() {
-        return await this.taskRepository.find({
-            order: { createdAt: 'DESC' },
-        });
+        try {
+            return await this.taskRepository.find({
+                order: { createdAt: 'DESC' },
+            });
+        }
+        catch (error) {
+            throw new common_1.BadRequestException('Erro ao buscar tarefas');
+        }
     }
     async findOne(id) {
+        if (!id) {
+            throw new common_1.BadRequestException('ID inválido');
+        }
         const task = await this.taskRepository.findOne({ where: { id } });
         if (!task) {
-            throw new common_1.NotFoundException(`Task with ID ${id} not found`);
+            throw new common_1.NotFoundException(`Tarefa com ID ${id} não encontrada`);
         }
         return task;
     }
     async create(createTaskDto) {
-        const task = this.taskRepository.create({
-            ...createTaskDto,
-            dueDate: new Date(createTaskDto.dueDate),
-        });
-        return await this.taskRepository.save(task);
+        try {
+            const dueDate = new Date(createTaskDto.dueDate);
+            const adjustedDate = new Date(dueDate.getTime() + dueDate.getTimezoneOffset() * 60000);
+            const task = this.taskRepository.create({
+                title: createTaskDto.title,
+                description: createTaskDto.description,
+                dueDate: adjustedDate,
+                completed: createTaskDto.completed ?? false,
+                priority: createTaskDto.priority ?? 'medium',
+            });
+            const savedTask = await this.taskRepository.save(task);
+            return savedTask;
+        }
+        catch (error) {
+            throw new common_1.BadRequestException('Erro ao criar tarefa');
+        }
     }
     async update(id, updateTaskDto) {
         const task = await this.findOne(id);
-        Object.assign(task, {
-            ...updateTaskDto,
-            dueDate: updateTaskDto.dueDate ? new Date(updateTaskDto.dueDate) : task.dueDate,
-        });
-        return await this.taskRepository.save(task);
+        if (updateTaskDto.title !== undefined) {
+            task.title = updateTaskDto.title;
+        }
+        if (updateTaskDto.description !== undefined) {
+            task.description = updateTaskDto.description;
+        }
+        if (updateTaskDto.dueDate !== undefined) {
+            const dueDate = new Date(updateTaskDto.dueDate);
+            task.dueDate = new Date(dueDate.getTime() + dueDate.getTimezoneOffset() * 60000);
+        }
+        if (updateTaskDto.completed !== undefined) {
+            task.completed = updateTaskDto.completed;
+        }
+        if (updateTaskDto.priority !== undefined) {
+            task.priority = updateTaskDto.priority;
+        }
+        try {
+            return await this.taskRepository.save(task);
+        }
+        catch (error) {
+            throw new common_1.BadRequestException('Erro ao atualizar tarefa');
+        }
     }
     async remove(id) {
         const task = await this.findOne(id);
-        await this.taskRepository.remove(task);
+        try {
+            await this.taskRepository.remove(task);
+        }
+        catch (error) {
+            throw new common_1.BadRequestException('Erro ao remover tarefa');
+        }
     }
 };
 exports.TasksService = TasksService;

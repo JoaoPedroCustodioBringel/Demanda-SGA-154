@@ -21,20 +21,20 @@ let TasksController = class TasksController {
     constructor(tasksService) {
         this.tasksService = tasksService;
     }
-    async findAll() {
-        return await this.tasksService.findAll();
+    findAll() {
+        return this.tasksService.findAll();
     }
-    async findOne(id) {
-        return await this.tasksService.findOne(id);
+    findOne(id) {
+        return this.tasksService.findOne(id);
     }
-    async create(createTaskDto) {
-        return await this.tasksService.create(createTaskDto);
+    create(createTaskDto) {
+        return this.tasksService.create(createTaskDto);
     }
-    async update(id, updateTaskDto) {
-        return await this.tasksService.update(id, updateTaskDto);
+    update(id, updateTaskDto) {
+        return this.tasksService.update(id, updateTaskDto);
     }
-    async remove(id) {
-        await this.tasksService.remove(id);
+    remove(id) {
+        return this.tasksService.remove(id);
     }
 };
 exports.TasksController = TasksController;
@@ -54,6 +54,7 @@ __decorate([
 __decorate([
     (0, common_1.Post)(),
     (0, common_1.HttpCode)(common_1.HttpStatus.CREATED),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe({ transform: true, whitelist: true })),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [task_dto_1.CreateTaskDto]),
@@ -61,6 +62,7 @@ __decorate([
 ], TasksController.prototype, "create", null);
 __decorate([
     (0, common_1.Put)(':id'),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe({ transform: true, whitelist: true })),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),

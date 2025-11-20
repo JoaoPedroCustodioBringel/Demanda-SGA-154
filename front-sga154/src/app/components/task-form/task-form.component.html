@@ -1,0 +1,98 @@
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h3 class="mb-0">
+            {{ isEditMode ? 'Editar Tarefa' : 'Nova Tarefa' }}
+          </h3>
+        </div>
+        <div class="card-body">
+          @if (isLoading()) {
+          <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Carregando...</span>
+            </div>
+          </div>
+          } @else {
+          <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label for="title" class="form-label">Título *</label>
+              <input type="text" class="form-control" id="title" formControlName="title"
+                placeholder="Digite o título da tarefa" [class.is-invalid]="isFieldInvalid('title')" />
+              @if (isFieldInvalid('title')) {
+              <div class="invalid-feedback">
+                {{ getErrorMessage('title') }}
+              </div>
+              }
+            </div>
+
+            <div class="mb-3">
+              <label for="description" class="form-label">Descrição *</label>
+              <textarea class="form-control" id="description" formControlName="description" rows="4"
+                placeholder="Digite a descrição da tarefa"
+                [class.is-invalid]="isFieldInvalid('description')"></textarea>
+              @if (isFieldInvalid('description')) {
+              <div class="invalid-feedback">
+                {{ getErrorMessage('description') }}
+              </div>
+              }
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="dueDate" class="form-label">Data de Vencimento *</label>
+                <input type="date" class="form-control" id="dueDate" formControlName="dueDate"
+                  [class.is-invalid]="isFieldInvalid('dueDate')" />
+                @if (isFieldInvalid('dueDate')) {
+                <div class="invalid-feedback">
+                  {{ getErrorMessage('dueDate') }}
+                </div>
+                }
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label for="priority" class="form-label">Prioridade *</label>
+                <select class="form-select" id="priority" formControlName="priority"
+                  [class.is-invalid]="isFieldInvalid('priority')">
+                  <option value="low">Baixa</option>
+                  <option value="medium">Média</option>
+                  <option value="high">Alta</option>
+                </select>
+                @if (isFieldInvalid('priority')) {
+                <div class="invalid-feedback">
+                  {{ getErrorMessage('priority') }}
+                </div>
+                }
+              </div>
+            </div>
+
+            @if (isEditMode) {
+            <div class="mb-3">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="completed" formControlName="completed" />
+                <label class="form-check-label" for="completed">
+                  Tarefa concluída
+                </label>
+              </div>
+            </div>
+            }
+
+            <div class="d-grid gap-2 mt-4">
+              <button type="submit" class="btn btn-primary" [disabled]="submitting()">
+                @if (submitting()) {
+                <span class="spinner-border spinner-border-sm me-2"></span>
+                }
+                {{ isEditMode ? 'Atualizar' : 'Criar' }} Tarefa
+              </button>
+              <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">
+                Cancelar
+              </button>
+            </div>
+          </form>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

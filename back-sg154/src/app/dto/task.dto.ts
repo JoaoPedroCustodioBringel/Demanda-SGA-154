@@ -4,8 +4,9 @@ import {
   IsBoolean,
   IsEnum,
   IsDateString,
-  IsOptional
+  IsOptional,
 } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class CreateTaskDto {
   @IsString()
@@ -21,11 +22,13 @@ export class CreateTaskDto {
   dueDate: string;
 
   @IsBoolean()
-  completed: boolean;
+  @IsOptional()
+  @Transform(({ value }) => value === true || value === 'true')
+  completed?: boolean;
 
   @IsEnum(['low', 'medium', 'high'])
-  @IsNotEmpty()
-  priority: 'low' | 'medium' | 'high';
+  @IsOptional()
+  priority?: 'low' | 'medium' | 'high';
 }
 
 export class UpdateTaskDto {
@@ -43,6 +46,7 @@ export class UpdateTaskDto {
 
   @IsBoolean()
   @IsOptional()
+  @Transform(({ value }) => value === true || value === 'true')
   completed?: boolean;
 
   @IsEnum(['low', 'medium', 'high'])

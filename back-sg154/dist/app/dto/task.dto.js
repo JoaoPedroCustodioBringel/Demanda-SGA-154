@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UpdateTaskDto = exports.CreateTaskDto = void 0;
 const class_validator_1 = require("class-validator");
+const class_transformer_1 = require("class-transformer");
 class CreateTaskDto {
     title;
     description;
@@ -36,11 +37,13 @@ __decorate([
 ], CreateTaskDto.prototype, "dueDate", void 0);
 __decorate([
     (0, class_validator_1.IsBoolean)(),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_transformer_1.Transform)(({ value }) => value === true || value === 'true'),
     __metadata("design:type", Boolean)
 ], CreateTaskDto.prototype, "completed", void 0);
 __decorate([
     (0, class_validator_1.IsEnum)(['low', 'medium', 'high']),
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], CreateTaskDto.prototype, "priority", void 0);
 class UpdateTaskDto {
@@ -69,6 +72,7 @@ __decorate([
 __decorate([
     (0, class_validator_1.IsBoolean)(),
     (0, class_validator_1.IsOptional)(),
+    (0, class_transformer_1.Transform)(({ value }) => value === true || value === 'true'),
     __metadata("design:type", Boolean)
 ], UpdateTaskDto.prototype, "completed", void 0);
 __decorate([

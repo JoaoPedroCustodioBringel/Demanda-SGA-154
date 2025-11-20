@@ -3,7 +3,7 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('tasks')
@@ -17,13 +17,13 @@ export class Task {
   @Column({ type: 'text' })
   description: string;
 
-  @Column({ type: 'date' })
+  @Column({ type: 'datetime' })
   dueDate: Date;
 
   @Column({ type: 'boolean', default: false })
   completed: boolean;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'varchar', length: 20, default: 'medium' })
   priority: 'low' | 'medium' | 'high';
 
   @CreateDateColumn()
